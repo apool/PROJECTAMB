@@ -1,0 +1,45 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Category {
+  id          String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String     @db.VarChar(50)
+  slug        String     @unique @db.VarChar(50)
+  description String?    @db.VarChar(200)
+  position    Int        @default(0)
+  created_at  DateTime   @default(now()) @db.Timestamptz
+  menu_items  MenuItem[]
+
+  @@index([slug])
+  @@index([position])
+  @@map("categories")
+}
+
+model MenuItem {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  category_id String    @db.Uuid
+  name        String    @db.VarChar(100)
+  description String    @db.VarChar(500)
+  price       Decimal   @db.Decimal(8, 2)
+  image_url   String?   @db.VarChar(500)
+  is_available Boolean  @default(true)
+  is_featured  Boolean  @default(false)
+  extras      Json?
+  position    Int       @default(0)
+  created_at  DateTime  @default(now()) @db.Timestamptz
+  updated_at  DateTime  @updatedAt @db.Timestamptz
+  category    Category  @relation(fields: [category_id], references: [id], onDelete: Cascade)
+
+  @@index([category_id])
+  @@index([is_available])
+  @@index([is_featured])
+  @@index([position])
+  @@map("menu_items")
+}
