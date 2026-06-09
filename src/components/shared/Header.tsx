@@ -1,8 +1,9 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { useState } from 'react'
-import { Menu, X, ShoppingCart, Flame } from 'lucide-react'
+import { Menu, X, ShoppingCart } from 'lucide-react'
 import { useCartContext } from './CartContext'
 import { CartDrawer } from '../menu/CartDrawer'
 
@@ -25,8 +26,14 @@ export function Header() {
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2 group">
-              <div className="w-9 h-9 rounded-full bg-fire-gradient flex items-center justify-center brand-glow group-hover:brand-glow-lg transition-all">
-                <Flame className="w-5 h-5 text-white" />
+              <div className="w-9 h-9 rounded-full overflow-hidden brand-glow group-hover:brand-glow-lg transition-all shrink-0">
+                <Image
+                  src="/img/logo.jpg"
+                  alt="American Burguer"
+                  width={36}
+                  height={36}
+                  className="object-cover w-full h-full"
+                />
               </div>
               <span className="font-display text-2xl text-white tracking-widest">
                 AMERICAN BURGUER
