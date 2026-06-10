@@ -1,7 +1,8 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import { createClient } from '@/lib/supabase/server'
-import { Flame, LayoutDashboard, UtensilsCrossed, LogOut } from 'lucide-react'
+import { LayoutDashboard, UtensilsCrossed, LogOut, ClipboardList } from 'lucide-react'
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const supabase = await createClient()
@@ -18,8 +19,8 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         {/* Logo */}
         <div className="p-6 border-b border-white/5">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-fire-gradient flex items-center justify-center">
-              <Flame className="w-4 h-4 text-white" />
+            <div className="w-8 h-8 rounded-full overflow-hidden shrink-0">
+              <Image src="/img/logo.jpg" alt="American Burguer" width={32} height={32} className="object-cover w-full h-full" />
             </div>
             <div>
               <p className="font-display text-sm tracking-widest">AMERICAN</p>
@@ -43,6 +44,13 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           >
             <UtensilsCrossed className="w-4 h-4" />
             Cardápio
+          </Link>
+          <Link
+            href="/admin/pedidos"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-white/70 hover:bg-surface-2 hover:text-white transition-colors"
+          >
+            <ClipboardList className="w-4 h-4" />
+            Pedidos
           </Link>
         </nav>
 

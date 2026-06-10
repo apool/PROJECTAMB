@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
 import { MenuGrid } from '@/components/menu/MenuGrid'
+import { WhatsAppFAB } from '@/components/shared/WhatsAppFAB'
 import type { Category, MenuItem } from '@/types'
 
 export const metadata: Metadata = {
@@ -54,6 +55,7 @@ export default async function CardapioPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
         <MenuGrid categories={categories} items={items} />
       </div>
+      <WhatsAppFAB />
     </div>
   )
 }

@@ -23,6 +23,7 @@ export async function createMenuItem(
       .insert({
         ...parsed.data,
         image_url: parsed.data.image_url || null,
+        promotional_price: parsed.data.promotional_price ?? null,
         extras: parsed.data.extras?.length ? parsed.data.extras : null,
       })
       .select('*, category:categories(*)')
@@ -61,6 +62,7 @@ export async function updateMenuItem(
       .update({
         ...parsed.data,
         image_url: parsed.data.image_url || null,
+        promotional_price: parsed.data.promotional_price ?? null,
         extras: parsed.data.extras?.length ? parsed.data.extras : null,
       })
       .eq('id', id)
@@ -135,6 +137,39 @@ export async function toggleAvailability(
     return { success: true, data }
   } catch (err) {
     console.error('[toggleAvailability]', err)
+    return { success: false, error: 'Erro inesperado' }
+  }
+}
+
+export async function toggleFeatured(
+  id: string
+): Promise<ApiResponse<{ is_featured: boolean }>> {
+  try {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return { success: false, error: 'Não autorizado' }
+
+    const { data: current } = await supabase
+      .from('menu_items')
+      .select('is_featured')
+      .eq('id', id)
+      .single()
+
+    if (!current) return { success: false, error: 'Item não encontrado' }
+
+    const { data, error } = await supabase
+      .from('menu_items')
+      .update({ is_featured: !current.is_featured })
+      .eq('id', id)
+      .select('is_featured')
+      .single()
+
+    if (error) return { success: false, error: 'Erro ao atualizar' }
+
+    revalidatePath('/')
+    return { success: true, data }
+  } catch (err) {
+    console.error('[toggleFeatured]', err)
     return { success: false, error: 'Erro inesperado' }
   }
 }

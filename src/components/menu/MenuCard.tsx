@@ -17,6 +17,8 @@ export function MenuCard({ item }: Props) {
   const [modalOpen, setModalOpen] = useState(false)
   const [added, setAdded] = useState(false)
 
+  const effectivePrice = item.promotional_price ?? item.price
+
   function handleConfirm(extras: Extra[], observation: string) {
     addItem(item, extras, observation)
     setModalOpen(false)
@@ -38,9 +40,7 @@ export function MenuCard({ item }: Props) {
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-6xl">
-              🍔
-            </div>
+            <div className="w-full h-full flex items-center justify-center text-6xl">🍔</div>
           )}
           <div className="absolute inset-0 bg-card-gradient" />
 
@@ -48,6 +48,12 @@ export function MenuCard({ item }: Props) {
             <div className="absolute top-3 left-3 flex items-center gap-1 bg-brand-600 text-white text-xs font-bold px-2.5 py-1 rounded-full">
               <Star className="w-3 h-3 fill-white" />
               DESTAQUE
+            </div>
+          )}
+
+          {item.promotional_price && (
+            <div className="absolute top-3 right-3 bg-red-500 text-white text-xs font-bold px-2.5 py-1 rounded-full">
+              PROMO
             </div>
           )}
 
@@ -83,9 +89,16 @@ export function MenuCard({ item }: Props) {
           )}
 
           <div className="flex items-center justify-between mt-1">
-            <span className="font-display text-2xl text-brand-600 tracking-wider">
-              {formatCurrency(item.price)}
-            </span>
+            <div className="flex flex-col">
+              <span className="font-display text-2xl text-brand-600 tracking-wider">
+                {formatCurrency(effectivePrice)}
+              </span>
+              {item.promotional_price && (
+                <span className="text-white/30 text-xs line-through leading-none">
+                  {formatCurrency(item.price)}
+                </span>
+              )}
+            </div>
             <button
               onClick={() => setModalOpen(true)}
               disabled={!item.is_available || added}
@@ -100,14 +113,7 @@ export function MenuCard({ item }: Props) {
                 }
               `}
             >
-              {added ? (
-                '✓ Adicionado'
-              ) : (
-                <>
-                  <Plus className="w-4 h-4" />
-                  Adicionar
-                </>
-              )}
+              {added ? '✓ Adicionado' : <><Plus className="w-4 h-4" />Adicionar</>}
             </button>
           </div>
         </div>

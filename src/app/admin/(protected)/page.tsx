@@ -1,14 +1,20 @@
 import { createClient } from '@/lib/supabase/server'
-import { UtensilsCrossed, CheckCircle, XCircle, Star } from 'lucide-react'
+import { UtensilsCrossed, CheckCircle, XCircle, Star, ClipboardList } from 'lucide-react'
 import Link from 'next/link'
+
+export const dynamic = 'force-dynamic'
 
 export default async function AdminDashboardPage() {
   const supabase = await createClient()
 
-  const [{ count: total }, { count: available }, { count: featured }] = await Promise.all([
+  const todayStart = new Date()
+  todayStart.setHours(0, 0, 0, 0)
+
+  const [{ count: total }, { count: available }, { count: featured }, { count: ordersToday }] = await Promise.all([
     supabase.from('menu_items').select('*', { count: 'exact', head: true }),
     supabase.from('menu_items').select('*', { count: 'exact', head: true }).eq('is_available', true),
     supabase.from('menu_items').select('*', { count: 'exact', head: true }).eq('is_featured', true),
+    supabase.from('orders').select('*', { count: 'exact', head: true }).gte('created_at', todayStart.toISOString()),
   ])
 
   const stats = [
@@ -16,6 +22,7 @@ export default async function AdminDashboardPage() {
     { label: 'Disponíveis', value: available ?? 0, icon: CheckCircle, color: 'text-green-500' },
     { label: 'Indisponíveis', value: (total ?? 0) - (available ?? 0), icon: XCircle, color: 'text-red-400' },
     { label: 'Destaques', value: featured ?? 0, icon: Star, color: 'text-yellow-400' },
+    { label: 'Pedidos hoje', value: ordersToday ?? 0, icon: ClipboardList, color: 'text-blue-400' },
   ]
 
   return (
@@ -25,8 +32,7 @@ export default async function AdminDashboardPage() {
         <p className="text-white/40 text-sm mt-1">Visão geral do cardápio</p>
       </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
         {stats.map((stat) => (
           <div key={stat.label} className="bg-surface-2 border border-white/5 rounded-2xl p-5">
             <stat.icon className={`w-5 h-5 ${stat.color} mb-3`} />
@@ -36,7 +42,6 @@ export default async function AdminDashboardPage() {
         ))}
       </div>
 
-      {/* Quick actions */}
       <div className="bg-surface-2 border border-white/5 rounded-2xl p-6">
         <h2 className="font-display text-2xl tracking-wide mb-4">AÇÕES RÁPIDAS</h2>
         <div className="flex flex-wrap gap-3">
@@ -46,6 +51,13 @@ export default async function AdminDashboardPage() {
           >
             <UtensilsCrossed className="w-4 h-4" />
             Gerenciar Cardápio
+          </Link>
+          <Link
+            href="/admin/pedidos"
+            className="flex items-center gap-2 bg-surface-3 hover:bg-surface-4 text-white/70 font-semibold px-5 py-2.5 rounded-xl text-sm transition-all border border-white/5"
+          >
+            <ClipboardList className="w-4 h-4" />
+            Ver Pedidos
           </Link>
           <Link
             href="/"

@@ -13,6 +13,7 @@ export type MenuItem = {
   name: string
   description: string
   price: number
+  promotional_price: number | null
   image_url: string | null
   is_available: boolean
   is_featured: boolean

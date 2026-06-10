@@ -16,8 +16,7 @@ const navLinks = [
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false)
-  const [cartOpen, setCartOpen] = useState(false)
-  const { count } = useCartContext()
+  const { count, cartOpen, openCart, closeCart } = useCartContext()
 
   return (
     <>
@@ -56,7 +55,7 @@ export function Header() {
             {/* Actions */}
             <div className="flex items-center gap-3">
               <button
-                onClick={() => setCartOpen(true)}
+                onClick={openCart}
                 className="relative p-2 text-white/70 hover:text-brand-600 transition-colors"
                 aria-label={`Carrinho com ${count} itens`}
               >
@@ -99,7 +98,7 @@ export function Header() {
         )}
       </header>
 
-      <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
+      <CartDrawer open={cartOpen} onClose={closeCart} />
     </>
   )
 }

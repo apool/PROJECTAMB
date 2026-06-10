@@ -16,6 +16,8 @@ export function AddToCartModal({ item, onClose, onConfirm }: Props) {
   const [selectedExtras, setSelectedExtras] = useState<Extra[]>([])
   const [observation, setObservation] = useState('')
 
+  const basePrice = item.promotional_price ?? item.price
+
   function toggleExtra(extra: Extra) {
     setSelectedExtras((prev) =>
       prev.some((e) => e.name === extra.name)
@@ -24,7 +26,7 @@ export function AddToCartModal({ item, onClose, onConfirm }: Props) {
     )
   }
 
-  const total = item.price + selectedExtras.reduce((sum, e) => sum + e.price, 0)
+  const total = basePrice + selectedExtras.reduce((sum, e) => sum + e.price, 0)
 
   return (
     <>
@@ -35,7 +37,6 @@ export function AddToCartModal({ item, onClose, onConfirm }: Props) {
       />
 
       <div className="fixed inset-x-4 bottom-0 z-50 sm:inset-auto sm:left-1/2 sm:top-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 sm:w-full sm:max-w-md bg-surface rounded-t-3xl sm:rounded-2xl border border-white/10 shadow-2xl overflow-hidden">
-        {/* Image */}
         {item.image_url && (
           <div className="relative h-44 sm:h-52 w-full">
             <Image
@@ -50,13 +51,18 @@ export function AddToCartModal({ item, onClose, onConfirm }: Props) {
         )}
 
         <div className="p-5 space-y-4">
-          {/* Header */}
           <div className="flex items-start justify-between gap-3">
             <div>
               <h3 className="font-display text-2xl tracking-wide">{item.name}</h3>
               <p className="text-white/50 text-sm mt-1 leading-relaxed line-clamp-2">
                 {item.description}
               </p>
+              <div className="flex items-center gap-2 mt-1">
+                <span className="text-brand-600 font-bold">{formatCurrency(basePrice)}</span>
+                {item.promotional_price && (
+                  <span className="text-white/30 text-sm line-through">{formatCurrency(item.price)}</span>
+                )}
+              </div>
             </div>
             <button
               onClick={onClose}
@@ -67,7 +73,6 @@ export function AddToCartModal({ item, onClose, onConfirm }: Props) {
             </button>
           </div>
 
-          {/* Extras */}
           {Array.isArray(item.extras) && item.extras.length > 0 && (
             <div>
               <p className="text-sm font-semibold text-white/70 mb-2">Adicionais</p>
@@ -106,21 +111,18 @@ export function AddToCartModal({ item, onClose, onConfirm }: Props) {
             </div>
           )}
 
-          {/* Observation */}
           <div>
             <p className="text-sm font-semibold text-white/70 mb-2">
-              Observação{' '}
-              <span className="font-normal text-white/40">(opcional)</span>
+              Observação <span className="font-normal text-white/40">(opcional)</span>
             </p>
             <textarea
               value={observation}
               onChange={(e) => setObservation(e.target.value)}
-              placeholder="Ex: sem cebola, ponto da carne bem passado..."
+              placeholder="Ex: sem cebola, ponto da carne bem passado…"
               className="w-full bg-surface-2 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-white/20 focus:outline-none focus:border-brand-600 transition-colors resize-none h-20"
             />
           </div>
 
-          {/* Confirm */}
           <button
             onClick={() => onConfirm(selectedExtras, observation)}
             className="w-full flex items-center justify-between bg-brand-600 hover:bg-brand-700 text-white font-bold px-5 py-4 rounded-xl transition-all hover:scale-[1.02] active:scale-[0.98]"

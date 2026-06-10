@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, ReactNode } from 'react'
+import { createContext, useContext, useState, ReactNode } from 'react'
 import { useCart } from '@/hooks/useCart'
 import type { CartItem, MenuItem, Extra } from '@/types'
 
@@ -9,6 +9,9 @@ type CartContextType = {
   total: number
   count: number
   whatsappUrl: string
+  cartOpen: boolean
+  openCart: () => void
+  closeCart: () => void
   addItem: (menuItem: MenuItem, extras?: Extra[], observation?: string) => void
   removeItem: (id: string) => void
   updateQuantity: (id: string, quantity: number) => void
@@ -19,7 +22,20 @@ const CartContext = createContext<CartContextType | null>(null)
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const cart = useCart()
-  return <CartContext.Provider value={cart}>{children}</CartContext.Provider>
+  const [cartOpen, setCartOpen] = useState(false)
+
+  return (
+    <CartContext.Provider
+      value={{
+        ...cart,
+        cartOpen,
+        openCart: () => setCartOpen(true),
+        closeCart: () => setCartOpen(false),
+      }}
+    >
+      {children}
+    </CartContext.Provider>
+  )
 }
 
 export function useCartContext() {

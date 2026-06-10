@@ -11,11 +11,13 @@ type Props = {
 }
 
 export function MenuGrid({ categories, items }: Props) {
-  const [activeCategory, setActiveCategory] = useState('all')
+  const [activeCategory, setActiveCategory] = useState('destaque')
 
   const filtered =
-    activeCategory === 'all'
-      ? items
+    activeCategory === 'destaque'
+      ? items.filter((i) => i.is_featured)
+      : activeCategory === 'promo'
+      ? items.filter((i) => i.promotional_price != null)
       : items.filter((i) => i.category?.slug === activeCategory)
 
   return (

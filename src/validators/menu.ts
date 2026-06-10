@@ -17,8 +17,9 @@ export const menuItemSchema = z.object({
   price: z
     .number({ invalid_type_error: 'Preço inválido' })
     .min(0.01, 'Preço deve ser maior que zero'),
+  promotional_price: z.number().min(0).optional().nullable(),
   category_id: z.string().uuid('Categoria inválida'),
-  image_url: z.string().url('URL inválida').optional().nullable(),
+  image_url: z.string().optional().nullable().transform((v) => v || null),
   is_available: z.boolean().default(true),
   is_featured: z.boolean().default(false),
   extras: z.array(extraSchema).optional().default([]),

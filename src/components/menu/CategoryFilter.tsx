@@ -10,8 +10,11 @@ type Props = {
 }
 
 export function CategoryFilter({ categories, active, onChange }: Props) {
-  const all = [{ id: 'all', name: 'Todos', slug: 'all', description: null, position: 0, created_at: '' }]
-  const items = [...all, ...categories]
+  const specials = [
+    { id: 'destaque', name: 'Destaque', slug: 'destaque', description: null, position: -2, created_at: '' },
+    { id: 'promo', name: 'Promoção', slug: 'promo', description: null, position: -1, created_at: '' },
+  ]
+  const items = [...specials, ...categories]
 
   return (
     <div

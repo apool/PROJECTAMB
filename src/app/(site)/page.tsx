@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { Flame, ChevronRight, Star, Clock, MapPin, Phone } from 'lucide-react'
+import { VideoBackground } from '@/components/shared/VideoBackground'
 import { createClient } from '@/lib/supabase/server'
 import { MenuCard } from '@/components/menu/MenuCard'
 import type { MenuItem } from '@/types'
@@ -24,14 +25,9 @@ export default async function HomePage() {
       {/* ─── HERO ─── */}
       <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
         {/* Background */}
-        <div className="absolute inset-0 bg-[#0A0A0A]">
-          <div className="absolute inset-0 bg-gradient-to-br from-brand-950/60 via-transparent to-transparent" />
-          <div
-            className="absolute inset-0 opacity-10"
-            style={{
-              backgroundImage: `radial-gradient(circle at 20% 50%, #E8620A 0%, transparent 60%)`,
-            }}
-          />
+        <div className="absolute inset-0 bg-[#0A0A0A] overflow-hidden">
+          <VideoBackground />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#0A0A0A]/60 via-transparent to-[#0A0A0A]/80" />
         </div>
 
         <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 text-center">
@@ -64,14 +60,6 @@ export default async function HomePage() {
               Ver Cardápio
               <ChevronRight className="w-5 h-5" />
             </Link>
-            <a
-              href="https://wa.me/5546988205566?text=Ol%C3%A1!%20Quero%20fazer%20um%20pedido"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 bg-white/5 hover:bg-white/10 text-white font-bold px-8 py-4 rounded-2xl transition-all border border-white/10 text-lg"
-            >
-              Pedir agora
-            </a>
           </div>
 
           {/* Stats */}
@@ -209,15 +197,13 @@ export default async function HomePage() {
             ))}
           </div>
 
-          <a
-            href="https://wa.me/5546988205566?text=Ol%C3%A1!%20Quero%20fazer%20um%20pedido%20%F0%9F%94%A5"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-3 bg-[#25D366] hover:bg-[#1fba58] text-white font-bold px-10 py-4 rounded-2xl transition-all hover:scale-105 active:scale-95 shadow-xl shadow-[#25D366]/20 text-lg"
+          <Link
+            href="/cardapio"
+            className="inline-flex items-center gap-3 bg-brand-600 hover:bg-brand-700 text-white font-bold px-10 py-4 rounded-2xl transition-all hover:scale-105 active:scale-95 shadow-xl shadow-brand-900/30 text-lg"
           >
-            <span className="text-2xl">💬</span>
-            Chamar no WhatsApp
-          </a>
+            Ver Cardápio
+            <ChevronRight className="w-5 h-5" />
+          </Link>
         </div>
       </section>
     </>

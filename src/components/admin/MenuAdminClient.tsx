@@ -5,7 +5,7 @@ import { Plus, Pencil, Trash2, Star, CheckCircle, XCircle, Search } from 'lucide
 import Image from 'next/image'
 import { formatCurrency } from '@/lib/utils'
 import { MenuItemFormDialog } from './MenuItemFormDialog'
-import { deleteMenuItem, toggleAvailability } from '@/actions/menu'
+import { deleteMenuItem, toggleAvailability, toggleFeatured } from '@/actions/menu'
 import type { Category, MenuItem } from '@/types'
 
 type Props = {
@@ -43,11 +43,20 @@ export function MenuAdminClient({ initialCategories, initialItems }: Props) {
     else alert(res.error ?? 'Erro ao remover')
   }
 
-  async function handleToggle(id: string) {
+  async function handleToggleAvailability(id: string) {
     const res = await toggleAvailability(id)
     if (res.success && res.data) {
       setItems((prev) =>
         prev.map((i) => (i.id === id ? { ...i, is_available: res.data!.is_available } : i))
+      )
+    }
+  }
+
+  async function handleToggleFeatured(id: string) {
+    const res = await toggleFeatured(id)
+    if (res.success && res.data) {
+      setItems((prev) =>
+        prev.map((i) => (i.id === id ? { ...i, is_featured: res.data!.is_featured } : i))
       )
     }
   }
@@ -94,14 +103,15 @@ export function MenuAdminClient({ initialCategories, initialItems }: Props) {
                 <th className="text-left px-5 py-3.5 font-medium">Item</th>
                 <th className="text-left px-5 py-3.5 font-medium hidden md:table-cell">Categoria</th>
                 <th className="text-right px-5 py-3.5 font-medium">Preço</th>
-                <th className="text-center px-5 py-3.5 font-medium">Status</th>
+                <th className="text-center px-5 py-3.5 font-medium">Ativo</th>
+                <th className="text-center px-5 py-3.5 font-medium">Destaque</th>
                 <th className="text-right px-5 py-3.5 font-medium">Ações</th>
               </tr>
             </thead>
             <tbody>
               {filtered.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="text-center py-12 text-white/30">
+                  <td colSpan={6} className="text-center py-12 text-white/30">
                     Nenhum item encontrado
                   </td>
                 </tr>
@@ -129,7 +139,9 @@ export function MenuAdminClient({ initialCategories, initialItems }: Props) {
                         <div>
                           <div className="flex items-center gap-1.5 font-medium">
                             {item.name}
-                            {item.is_featured && <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />}
+                            {item.is_featured && (
+                              <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+                            )}
                           </div>
                           <p className="text-white/30 text-xs truncate max-w-xs">{item.description}</p>
                         </div>
@@ -138,13 +150,25 @@ export function MenuAdminClient({ initialCategories, initialItems }: Props) {
                     <td className="px-5 py-3 hidden md:table-cell text-white/50">
                       {item.category?.name ?? '—'}
                     </td>
-                    <td className="px-5 py-3 text-right font-semibold text-brand-600">
-                      {formatCurrency(item.price)}
+                    <td className="px-5 py-3 text-right">
+                      {item.promotional_price ? (
+                        <div className="flex flex-col items-end">
+                          <span className="font-semibold text-red-400">
+                            {formatCurrency(item.promotional_price)}
+                          </span>
+                          <span className="text-white/30 text-xs line-through">
+                            {formatCurrency(item.price)}
+                          </span>
+                        </div>
+                      ) : (
+                        <span className="font-semibold text-brand-600">
+                          {formatCurrency(item.price)}
+                        </span>
+                      )}
                     </td>
                     <td className="px-5 py-3 text-center">
                       <button
-                        onClick={() => handleToggle(item.id)}
-                        className="inline-flex items-center gap-1 text-xs transition-colors"
+                        onClick={() => handleToggleAvailability(item.id)}
                         title={item.is_available ? 'Clique para desativar' : 'Clique para ativar'}
                       >
                         {item.is_available ? (
@@ -152,6 +176,20 @@ export function MenuAdminClient({ initialCategories, initialItems }: Props) {
                         ) : (
                           <XCircle className="w-4 h-4 text-red-400" />
                         )}
+                      </button>
+                    </td>
+                    <td className="px-5 py-3 text-center">
+                      <button
+                        onClick={() => handleToggleFeatured(item.id)}
+                        title={item.is_featured ? 'Remover dos destaques' : 'Adicionar aos destaques'}
+                      >
+                        <Star
+                          className={`w-4 h-4 transition-colors ${
+                            item.is_featured
+                              ? 'fill-yellow-400 text-yellow-400'
+                              : 'text-white/20 hover:text-yellow-400'
+                          }`}
+                        />
                       </button>
                     </td>
                     <td className="px-5 py-3 text-right">
@@ -180,7 +218,6 @@ export function MenuAdminClient({ initialCategories, initialItems }: Props) {
         </div>
       </div>
 
-      {/* Dialog */}
       {dialogOpen && (
         <MenuItemFormDialog
           item={editingItem}
