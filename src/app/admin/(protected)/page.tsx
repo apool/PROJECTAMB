@@ -26,9 +26,9 @@ export default async function AdminDashboardPage() {
   ]
 
   return (
-    <div className="p-8">
-      <div className="mb-8">
-        <h1 className="font-display text-4xl tracking-wide">DASHBOARD</h1>
+    <div className="p-4 sm:p-8">
+      <div className="mb-6 sm:mb-8">
+        <h1 className="font-display text-3xl sm:text-4xl tracking-wide">DASHBOARD</h1>
         <p className="text-white/40 text-sm mt-1">Visão geral do cardápio</p>
       </div>
 

@@ -23,9 +23,9 @@ export function OrdersAdminClient({ initialOrders, todayCount }: Props) {
   }
 
   return (
-    <div className="p-8">
-      <div className="mb-8">
-        <h1 className="font-display text-4xl tracking-wide">PEDIDOS</h1>
+    <div className="p-4 sm:p-8">
+      <div className="mb-6 sm:mb-8">
+        <h1 className="font-display text-3xl sm:text-4xl tracking-wide">PEDIDOS</h1>
         <p className="text-white/40 text-sm mt-1">Pedidos recebidos pelo site</p>
       </div>
 

@@ -64,7 +64,7 @@ export function MenuAdminClient({ initialCategories, initialItems }: Props) {
   return (
     <>
       {/* Toolbar */}
-      <div className="flex flex-wrap gap-3 mb-6">
+      <div className="flex flex-wrap gap-3 mb-4 sm:mb-6">
         <div className="flex-1 min-w-0 relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
           <input
