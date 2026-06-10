@@ -27,14 +27,34 @@ export async function uploadMenuImage(
   }
 }
 
+// Imagens estáticas disponíveis na pasta /public/img
+const STATIC_IMAGES = [
+  '/img/hamburger_1.jpg',
+  '/img/hamburger_2.jpg',
+  '/img/hamburger_3.jpg',
+  '/img/hamburger_5.jpg',
+  '/img/hamburger_6.jpg',
+  '/img/hamburger_7.jpg',
+  '/img/hamburger_9.jpg',
+  '/img/Batata Bacon & Cheddar.webp',
+  '/img/batata.jpg',
+  '/img/Onion Rings2.jpg',
+  '/img/Cocacola.png',
+  '/img/agua mineral.jpg',
+  '/img/suco.jpg',
+]
+
 export async function listMenuImages(): Promise<string[]> {
   try {
+    // Em desenvolvimento lê dinamicamente do filesystem
     const imgDir = path.join(process.cwd(), 'public', 'img')
     const files = await readdir(imgDir)
-    return files
+    const dynamic = files
       .filter((f) => /\.(jpg|jpeg|png|webp|gif)$/i.test(f))
       .map((f) => `/img/${f}`)
+    return dynamic.length > 0 ? dynamic : STATIC_IMAGES
   } catch {
-    return []
+    // Em produção (Vercel) o filesystem é somente leitura — usa lista estática
+    return STATIC_IMAGES
   }
 }
