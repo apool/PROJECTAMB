@@ -4,11 +4,12 @@ import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
-import { Menu, X, LayoutDashboard, UtensilsCrossed, ClipboardList, LogOut } from 'lucide-react'
+import { Menu, X, LayoutDashboard, UtensilsCrossed, ClipboardList, LogOut, Layers } from 'lucide-react'
 
 const links = [
   { href: '/admin', icon: LayoutDashboard, label: 'Dashboard' },
   { href: '/admin/menu', icon: UtensilsCrossed, label: 'Cardápio' },
+  { href: '/admin/combos', icon: Layers, label: 'Combos' },
   { href: '/admin/pedidos', icon: ClipboardList, label: 'Pedidos' },
 ]
 

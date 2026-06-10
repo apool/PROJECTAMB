@@ -42,6 +42,25 @@ export type Cart = {
   total: number
 }
 
+export type ComboItem = {
+  menu_item_id: string
+  name: string
+  quantity: number
+}
+
+export type Combo = {
+  id: string
+  name: string
+  description: string | null
+  price: number
+  promotional_price: number | null
+  image_url: string | null
+  is_available: boolean
+  position: number
+  items: ComboItem[]
+  created_at: string
+}
+
 export type ApiResponse<T> = {
   success: boolean
   data?: T

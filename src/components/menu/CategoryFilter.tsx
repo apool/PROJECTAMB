@@ -11,7 +11,8 @@ type Props = {
 
 export function CategoryFilter({ categories, active, onChange }: Props) {
   const specials = [
-    { id: 'destaque', name: 'Destaque', slug: 'destaque', description: null, position: -2, created_at: '' },
+    { id: 'destaque', name: 'Destaque', slug: 'destaque', description: null, position: -3, created_at: '' },
+    { id: 'combos', name: '🍔 Combos', slug: 'combos', description: null, position: -2, created_at: '' },
     { id: 'promo', name: 'Promoção', slug: 'promo', description: null, position: -1, created_at: '' },
   ]
   const items = [...specials, ...categories]
