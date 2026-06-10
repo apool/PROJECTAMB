@@ -83,10 +83,11 @@ export function CheckoutModal({ onClose, onSuccess }: Props) {
       address: fullAddress,
     }
 
+    const url = buildWhatsAppMessage(items, customer)
+
     await saveOrder({ customer, items })
 
-    const url = buildWhatsAppMessage(items, customer)
-    window.open(url, '_blank')
+    window.location.href = url
     clearCart()
     onSuccess?.()
     onClose()
